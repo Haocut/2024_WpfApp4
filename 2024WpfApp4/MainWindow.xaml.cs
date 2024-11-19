@@ -1,7 +1,10 @@
-﻿using System.Windows;
+﻿using Microsoft.Win32;
+using System.IO;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 
@@ -68,6 +71,7 @@ namespace _2024WpfApp4
                     polyline.StrokeThickness = strokeThickness;
                     break;
             }
+            DisplayStatus();
         }
 
         private void MyCanvas_MouseLeftButtonDown(object sender,
@@ -122,6 +126,7 @@ namespace _2024WpfApp4
                         break;
                 }
             }
+            DisplayStatus();
 
         }
 
@@ -182,7 +187,15 @@ namespace _2024WpfApp4
 
         private void DisplayStatus()
         {
+            if(actionType != "draw") statusAction.Content = $"{actionType}";
+            else statusAction.Content = $"繪圖模式: {shapeType}";
             statusPoint.Content = $"({Convert.ToInt32(start.X)},{Convert.ToInt32(start.Y)}) - ({Convert.ToInt32(dest.X)}, {Convert.ToInt32(dest.Y)})";
+            statusShape.Content = shapeType;
+            int linecount = myCanvas.Children.OfType<Line>().Count();
+            int rectanglecount = myCanvas.Children.OfType<Rectangle>().Count();
+            int ellipsecount = myCanvas.Children.OfType<Ellipse>().Count();
+            int polylinecount = myCanvas.Children.OfType<Polyline>().Count();
+            statusShape.Content = $"Lines: {linecount} Rectangles: {rectanglecount} Ellipses: {ellipsecount} Polylines: {polylinecount}";
         }
 
         private void StrokeColorPicker_SelectedColorChanged(object sender,
@@ -206,12 +219,56 @@ namespace _2024WpfApp4
         private void EraseButton_Click(object sender, RoutedEventArgs e)
         {
             actionType = "erase";
+            DisplayStatus();
         }
 
         private void ClearButton_Click(object sender, RoutedEventArgs e)
         {
             actionType = "clear";
             myCanvas.Children.Clear();
+            DisplayStatus();
+        }
+
+        private void SaveCanvas_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog()
+            {
+                Title = "儲存畫布",
+                Filter = "PNG Files (*.png)|*.png|JPG Files (*.jpg)|*.jpg|All Files (*.*)|*.*",
+                DefaultExt = ".png"
+                
+            };
+                        
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                int w = Convert.ToInt32(myCanvas.RenderSize.Width);
+                int h = Convert.ToInt32(myCanvas.RenderSize.Height);
+
+                // 建立 RenderTargetBitmap 來渲染 Canvas
+                RenderTargetBitmap renderBitmap = new RenderTargetBitmap(w, h, 96d, 96d, PixelFormats.Pbgra32);
+                myCanvas.Measure(new Size(w, h));
+                myCanvas.Arrange(new Rect(new Size(w, h)));
+                renderBitmap.Render(myCanvas);
+
+                BitmapEncoder encoder;
+                string extension = System.IO.Path.GetExtension(saveFileDialog.FileName).ToLower();
+                switch (extension)
+                {
+                    case ".jpg":
+                        encoder = new JpegBitmapEncoder();
+                        break;
+                    default:
+                        encoder = new PngBitmapEncoder();
+                        break;
+                }
+
+                encoder.Frames.Add(BitmapFrame.Create(renderBitmap));
+
+                using (FileStream outStream = new FileStream(saveFileDialog.FileName, FileMode.Create))
+                {
+                    encoder.Save(outStream);
+                }
+            }
         }
 
         private void StrokeThicknessSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
