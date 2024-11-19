@@ -16,17 +16,17 @@
                 </MenuItem>
             </Menu>
             <ToolBarTray Height="40" DockPanel.Dock="Top">
-                <ToolBar Height="38" Width="400" Background="Chartreuse">
+                <ToolBar Height="38" Width="550" Background="Chartreuse">
                     <Label Content="筆刷色彩" FontSize="14" VerticalAlignment="Center"/>
                     <xctk:ColorPicker x:Name="strokeColorPicker" Width="100" 
                         SelectedColorChanged="strokeColorPicker_SelectedColorChanged"/>
                     <Label Content="填滿色彩" FontSize="14" VerticalAlignment="Center"/>
                     <xctk:ColorPicker x:Name="fillColorPicker" Width="100" 
-                            SelectedColorChanged="fillColorPicker_SelectedColorChanged" Cursor=""/>
-                    <Slider x:Name="strokeThicknessSlider" Width="150" 
+                            SelectedColorChanged="fillColorPicker_SelectedColorChanged" />
+                    <Slider x:Name="strokeThicknessSlider" Width="120" 
                             VerticalAlignment="Center" Value="1" Minimum="1" 
                             IsSnapToTickEnabled="True" Margin="20,0,0,0" ValueChanged="strokeThicknessSlider_ValueChanged"/>
-                    <Label Width="40" Margin="10,0,0,0" Content="1" FontSize="14"
+                    <Label Width="40" Margin="10,0,0,0" Content="{Binding Value, ElementName=strokeThicknessSlider}" FontSize="14"
                            Foreground="Red" HorizontalAlignment="Center" 
                            VerticalAlignment="Center"
                            VerticalContentAlignment="Center"
@@ -60,7 +60,7 @@
                 </ToolBar>
             </ToolBarTray>
             <Canvas x:Name="myCanvas" Background="#FFF5F6D7" 
-                    DockPanel.Dock="Top" Height="353" MouseEnter="myCanvas_MouseEnter" 
+                    DockPanel.Dock="Top" Height="394" MouseEnter="myCanvas_MouseEnter" 
                     MouseLeftButtonDown="myCanvas_MouseLeftButtonDown" 
                     MouseMove="myCanvas_MouseMove" MouseLeftButtonUp="myCanvas_MouseLeftButtonUp"/>
             <StatusBar Height="35" DockPanel.Dock="Bottom" Background="Lightgray">
