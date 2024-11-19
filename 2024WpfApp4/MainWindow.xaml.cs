@@ -73,8 +73,8 @@ namespace _2024WpfApp4
                 Point origin;
                 origin.X = Math.Min(start.X, dest.X);
                 origin.Y = Math.Min(start.Y, dest.Y);
-                double.width = Math.Abs(start.X - dest.X);
-                double.height = Math.Abs(start.Y - dest.Y);
+                double width = Math.Abs(start.X - dest.X);
+                double height = Math.Abs(start.Y - dest.Y);
 
 
 
@@ -87,15 +87,15 @@ namespace _2024WpfApp4
                         break;
                     case "rectangle":
                         var rectagle = myCanvas.Children.OfType<Rectangle>().LastOrDefault();
-                        rectagle.Width = origin.width;
-                        rectagle.height = origin.height;
+                        rectagle.Width = width;
+                        rectagle.Height = height;
                         rectagle.SetValue(Canvas.LeftProperty, origin.X);
                         rectagle.SetValue(Canvas.TopProperty, origin.Y);
                         break;
                     case "ellipse":
                         var ellipse = myCanvas.Children.OfType<Ellipse>().LastOrDefault();
-                        ellipse.Width = origin.width;
-                        ellipse.height = origin.height;
+                        ellipse.Width = width;
+                        ellipse.Height = height;
                         ellipse.SetValue(Canvas.LeftProperty, origin.X);
                         ellipse.SetValue(Canvas.TopProperty, origin.Y);
                         break;
@@ -152,20 +152,22 @@ namespace _2024WpfApp4
             switch (shapeType)
             {
                 case "line":
-                    var line = new Line
-                    {
+                    Line line = new Line
+                    { 
                         X1 = start.X,
                         Y1 = start.Y,
                         X2 = start.X,
                         Y2 = start.Y,
-                        Stroke = Brush.Gray,
+                        Stroke = Brushes.Gray,
                         StrokeThickness = 1
                     };
+                    myCanvas.Children.Add(line);
+                    break;
                 case "rectangle":
                     Rectangle rectangle = new Rectangle
                     {
-                        Stroke = Brush.Gray,
-                        Fill = Brush.LightGray,
+                        Stroke = Brushes.Gray,
+                        Fill = Brushes.LightGray,
                     };
                     myCanvas.Children.Add(rectangle);
                     rectangle.SetValue(Canvas.LeftProperty, start.X);
@@ -174,8 +176,8 @@ namespace _2024WpfApp4
                 case "ellipse":
                     Ellipse ellipse = new Ellipse
                     {
-                        Stroke = Brush.Gray,
-                        Fill = Brush.LightGray,
+                        Stroke = Brushes.Gray,
+                        Fill = Brushes.LightGray,
                     };
                     myCanvas.Children.Add(ellipse);
                     ellipse.SetValue(Canvas.LeftProperty, start.X);
